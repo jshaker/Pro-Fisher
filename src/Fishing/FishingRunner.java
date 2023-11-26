@@ -1,22 +1,24 @@
+package Fishing;
+
+import Runner.Configuration;
+import Runner.Runner;
+import Runner.Status;
 import com.epicbot.api.shared.APIContext;
 import com.epicbot.api.shared.entity.NPC;
-import com.epicbot.api.shared.model.Area;
-import com.epicbot.api.shared.model.Tile;
 
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Map;
-
-public class DraynorFishing extends Runner {
+class FishingRunner extends Runner {
     private final APIContext apiContext;
     private final Configuration configuration;
     private final Status status;
 
-    public DraynorFishing(APIContext apiContext, Configuration configuration, Status status) {
+    private final String interaction_name;
+
+    public FishingRunner(APIContext apiContext, Configuration configuration, Status status, String interaction_name) {
         super(apiContext, configuration, status);
         this.configuration = configuration;
         this.apiContext = apiContext;
         this.status = status;
+        this.interaction_name = interaction_name;
     }
 
     @Override
@@ -36,38 +38,24 @@ public class DraynorFishing extends Runner {
             status.message = "Error - could not find fishing spot";
             return configuration.default_delay;
         }
-        if (!canReachFishingSpot(fishingSpot)) {
-            return walkToFishingSpot(fishingSpot);
-        }
         return startFishing(fishingSpot);
     }
 
     @Override
-    protected boolean ShouldBank() {
+    protected boolean ShouldDeposit() {
         return apiContext.inventory().isFull();
     }
 
     private NPC getNearestFishingSpot() {
-        return apiContext.npcs().query().nameMatches("Fishing spot").results().nearest();
+        return apiContext.npcs().query().nameMatches("Fishing spot").actions(interaction_name).results().nearest();
     }
 
     private int startFishing(NPC fishingSpot) {
-        boolean success = fishingSpot.interact("Small Net");
+        boolean success = fishingSpot.interact(interaction_name);
         if (!success) {
             status.message = "Error - could not start fishing";
         }
         status.message = "Starting fishing";
-        return 600;
-    }
-
-    private boolean canReachFishingSpot(NPC fishingSpot) {
-        return apiContext.localPlayer().getLocation().canReach(apiContext, fishingSpot.getLocation());
-    }
-
-    private int walkToFishingSpot(NPC fishingSpot) {
-        status.message = "Walking to fishing spot";
-        Tile nearest = apiContext.walking().getClosestTileOnMap(fishingSpot.getLocation());
-        apiContext.webWalking().walkTo(nearest);
         return 600;
     }
 }

@@ -1,3 +1,5 @@
+package Runner;
+
 public interface IRunner {
     public int Run();
 

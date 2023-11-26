@@ -1,4 +1,4 @@
-import com.epicbot.api.shared.APIContext;
+import Runner.Status;
 
 public interface Activity {
 

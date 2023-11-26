@@ -1,3 +1,5 @@
+package Runner;
+
 import com.epicbot.api.shared.model.Area;
 import com.epicbot.api.shared.model.Tile;
 
