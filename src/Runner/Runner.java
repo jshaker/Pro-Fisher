@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import static Inventory.Inventory.HasMustHave;
+
 public abstract class Runner implements IRunner {
 
     private final Configuration configuration;
@@ -41,22 +43,6 @@ public abstract class Runner implements IRunner {
         return configuration.default_delay;
     }
 
-    public static boolean HasMustHave(Map<String, Integer> must_have, APIContext apiContext1) {
-        String[] missing = must_have.entrySet().stream().filter(e -> {
-            if (!apiContext1.inventory().contains(e.getKey())) {
-                return true;
-            }
-            if (apiContext1.inventory().getItem(e.getKey()).isStackable()) {
-                return apiContext1.inventory().getItem(e.getKey()).getStackSize() < e.getValue();
-            }
-            return apiContext1.inventory().getCount(e.getKey()) < e.getValue();
-        }).map(Entry::getKey).toArray(String[]::new);
-        if (missing.length == 0) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean levelUpInterfacePresent() {
         return apiContext.widgets().get(233).isVisible();
     }
@@ -76,7 +62,7 @@ public abstract class Runner implements IRunner {
         if (ShouldDeposit()) {
             return this.bank.Deposit();
         }
-        if (!HasMustHave(configuration.must_have, apiContext)) {
+        if (!HasMustHave(apiContext.inventory(), configuration.must_have)) {
             return this.bank.Withdraw();
         }
         if (configuration.escape_configuration != null) {

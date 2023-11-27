@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static Inventory.Inventory.*;
+
 
 public class Bank {
 
@@ -21,65 +23,6 @@ public class Bank {
         this.config = config;
         this.apiContext = apiContext;
         this.status = status;
-    }
-
-    public static boolean InventoryContainsExactly(IInventoryAPI inventory, Map<String, Integer> counts) {
-        Map<String, Integer> actual = GetInventoryItemCounts(inventory);
-        if (actual.size() != counts.size()) { return false; }
-        for (Map.Entry<String, Integer> kv : actual.entrySet()) {
-            if (!Objects.equals(kv.getValue(), counts.get(kv.getKey()))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static Map<String, Integer> GetInventoryItemCounts(IInventoryAPI inventory) {
-        Map<String, Integer> counts = new HashMap<>();
-        for (int i = 0; i < 28; i++) {
-            ItemWidget item = inventory.getItemAt(i);
-            if (item == null) {
-                continue;
-            }
-            if (!counts.containsKey(item.getName())) {
-                counts.put(item.getName(), 0);
-            }
-            int count = 1;
-            if (item.isStackable()) {
-                count = item.getStackSize();
-            }
-            counts.put(item.getName(), counts.get(item.getName()) + count);
-        }
-        return counts;
-    }
-
-    public static Map<String, Integer> CountMissing(IInventoryAPI inventory, Map<String, Integer> expected) {
-        Map<String, Integer> inventoryCount = GetInventoryItemCounts(inventory);
-        Map<String, Integer> diff = new HashMap<>(expected);
-        for (Map.Entry<String, Integer> kv: expected.entrySet()) {
-            if (!inventoryCount.containsKey(kv.getKey())) {
-                continue;
-            }
-            Integer count = inventoryCount.get(kv.getKey());
-            diff.put(kv.getKey(), Math.max(kv.getValue() - count, 0));
-        }
-        diff.values().removeIf(f -> f == 0);
-        return diff;
-    }
-
-    public static Map<String, Integer> CountExcess(IInventoryAPI inventory, Map<String, Integer> expected) {
-        Map<String, Integer> inventoryCount = GetInventoryItemCounts(inventory);
-        inventoryCount.remove("Coins");
-        Map<String, Integer> diff = new HashMap<>(inventoryCount);
-        for (Map.Entry<String, Integer> kv: expected.entrySet()) {
-            if (!inventoryCount.containsKey(kv.getKey())) {
-                continue;
-            }
-            Integer count = inventoryCount.get(kv.getKey());
-            diff.put(kv.getKey(), Math.max(count - kv.getValue(), 0));
-        }
-        diff.values().removeIf(f -> f == null || f == 0);
-        return diff;
     }
 
     private static void debugMap(Map<String, Integer> map) {
