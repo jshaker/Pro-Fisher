@@ -28,7 +28,7 @@ class WoodcuttingRunner extends Runner {
 
     @Override
     protected boolean IsDoingActivity() {
-        return apiContext.localPlayer().getAnimation() == 879;
+        return apiContext.localPlayer().getAnimation() == 879 || apiContext.localPlayer().getAnimation() == 873;
     }
 
 

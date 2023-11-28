@@ -25,7 +25,7 @@ public class UserInterface extends JFrame {
             runners.put(option.GetName(), Cooking.Generator.Generate(apiContext, status, option.location, option.food));
         }
         for (WoodcuttingLocation location: WoodcuttingLocations.GetLocations()) {
-            runners.put("Chop " + location.tree.name + " in " + location.area_name, Woodcutting.Generator.Generate(apiContext, status, location, Axes.bronze));
+            runners.put("Chop " + location.tree.name + " in " + location.area_name, Woodcutting.Generator.Generate(apiContext, status, location, Axes.black));
         }
 
         setTitle("Pro Fisher");

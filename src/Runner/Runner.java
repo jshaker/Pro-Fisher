@@ -26,7 +26,7 @@ public abstract class Runner implements IRunner {
     private int escape() {
         status.message = "Escaping";
         apiContext.webWalking().walkTo(configuration.escape_configuration.safe_area.getRandomTile());
-        return configuration.default_delay;
+        return 30000;
     }
 
     protected int WalkToAreaOfInterest() {
