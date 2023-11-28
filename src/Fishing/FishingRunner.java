@@ -56,6 +56,6 @@ class FishingRunner extends Runner {
             status.message = "Error - could not start fishing";
         }
         status.message = "Starting fishing";
-        return 600;
+        return 6000;
     }
 }

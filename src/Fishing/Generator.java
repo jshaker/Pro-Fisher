@@ -10,6 +10,7 @@ public class Generator {
 
     public static IRunner Generate(APIContext apiContext, Status status, Location location, Activity activity) {
         Configuration configuration = new Configuration();
+        configuration.default_delay = 6000;
         configuration.area_of_interest = location.area;
         configuration.must_have = new HashMap<>(location.must_have);
         configuration.must_have.put(activity.tool, 1);

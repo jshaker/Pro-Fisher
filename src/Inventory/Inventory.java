@@ -55,7 +55,9 @@ public class Inventory {
 
     public static Map<String, Integer> CountExcess(IInventoryAPI inventory, Map<String, Integer> expected) {
         Map<String, Integer> inventoryCount = GetInventoryItemCounts(inventory);
-        inventoryCount.remove("Coins");
+        if (expected.containsKey("Coins")) {
+            inventoryCount.remove("Coins");
+        }
         Map<String, Integer> diff = new HashMap<>(inventoryCount);
         for (Map.Entry<String, Integer> kv: expected.entrySet()) {
             if (!inventoryCount.containsKey(kv.getKey())) {

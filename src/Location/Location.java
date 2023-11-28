@@ -12,13 +12,16 @@ public class Location {
 
     public Area area;
 
+    public Area safe_area;
+
     public RSBank bank;
 
     public HashMap<String, Integer> must_have;
 
-    public Location(String name, Area area, RSBank bank, HashMap<String, Integer> must_have) {
+    public Location(String name, Area area, Area safe_area, RSBank bank, HashMap<String, Integer> must_have) {
         this.name = name;
         this.area = area;
+        this.safe_area = safe_area;
         this.bank = bank;
         this.must_have = must_have;
     }

@@ -1,14 +1,6 @@
 package Runner;
 
 import com.epicbot.api.shared.APIContext;
-import com.epicbot.api.shared.entity.GameEntity;
-import com.epicbot.api.shared.entity.ItemWidget;
-import com.epicbot.api.shared.methods.IInventoryAPI;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 
 import static Inventory.Inventory.HasMustHave;
 
@@ -37,7 +29,7 @@ public abstract class Runner implements IRunner {
         return configuration.default_delay;
     }
 
-    private int walkToAreaOfInterest() {
+    protected int WalkToAreaOfInterest() {
         status.message = "Walking to area of interest";
         apiContext.webWalking().walkTo(configuration.area_of_interest.getRandomTile());
         return configuration.default_delay;
@@ -71,11 +63,7 @@ public abstract class Runner implements IRunner {
             }
         }
         if (!configuration.area_of_interest.contains(apiContext.localPlayer().getLocation())) {
-            return walkToAreaOfInterest();
-        }
-        GameEntity entity = configuration.get_entity.Get(apiContext);
-        if (!apiContext.localPlayer().getLocation().canReach(apiContext, entity.getLocation())) {
-            return walkToAreaOfInterest();
+            return WalkToAreaOfInterest();
         }
         if (IsDoingActivity()) {
             if (!levelUpInterfacePresent()) {

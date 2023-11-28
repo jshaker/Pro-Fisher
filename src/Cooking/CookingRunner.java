@@ -54,17 +54,17 @@ public class CookingRunner extends Runner.Runner {
         boolean success = cookingRange.interact("Cook");
         if (!success) {
             status.message = "Error - could not start cooking";
-            return 600;
+            return configuration.default_delay;
         }
         Time.sleep(2000, this::cookingInterfaceOpen);
         if (cookingInterfaceOpen()) {
             apiContext.keyboard().holdKey(VK_SPACE, getShortSleepTime());
             status.message = "Started cooking";
             Time.sleep(2000, this::IsDoingActivity);
-            return 600;
+            return configuration.default_delay;
         }
         status.message = "Error - Cooking interface not opened";
-        return 600;
+        return configuration.default_delay;
     }
 
     @Override

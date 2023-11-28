@@ -1,5 +1,8 @@
 import Runner.IRunner;
 import Runner.Status;
+import Woodcutting.Axes;
+import Woodcutting.WoodcuttingLocation;
+import Woodcutting.WoodcuttingLocations;
 import com.epicbot.api.shared.APIContext;
 
 import javax.swing.*;
@@ -21,7 +24,9 @@ public class UserInterface extends JFrame {
         for (Cooking.Option option: Cooking.Options.GetOptions()) {
             runners.put(option.GetName(), Cooking.Generator.Generate(apiContext, status, option.location, option.food));
         }
-
+        for (WoodcuttingLocation location: WoodcuttingLocations.GetLocations()) {
+            runners.put("Chop " + location.tree.name + " in " + location.area_name, Woodcutting.Generator.Generate(apiContext, status, location, Axes.bronze));
+        }
 
         setTitle("Pro Fisher");
         setSize(300, 100);
