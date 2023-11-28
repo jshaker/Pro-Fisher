@@ -1,5 +1,7 @@
 import Runner.IRunner;
 import Runner.Status;
+import Woodcutting.Axes;
+import Woodcutting.WoodcuttingLocations;
 import com.epicbot.api.shared.APIContext;
 import com.epicbot.api.shared.GameType;
 import com.epicbot.api.shared.script.LoopScript;
@@ -19,7 +21,7 @@ public class Main extends LoopScript {
     @Override
     public boolean onStart(String... strings) {
         this.status = new Status("Select a runner...");
-        this.runner = null;
+        this.runner = Woodcutting.Generator.Generate(getAPIContext(), status, WoodcuttingLocations.rimmington_yews, Axes.black);
         this.userInterface = new UserInterface(getAPIContext(), this.status, (IRunner runner) -> {
             this.status.message = String.format("Loading runner: %s", runner.Name());
             System.out.println(status.message);

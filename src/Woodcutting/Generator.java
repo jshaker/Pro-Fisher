@@ -20,7 +20,7 @@ public class Generator {
         }
         configuration.must_have = new HashMap<>();
         configuration.must_have.put(axe.name, 1);
-        configuration.bank_config = new BankConfiguration(location.bank, new HashMap<>(configuration.must_have), false);
+        configuration.bank_config = new BankConfiguration(location.bank, new HashMap<>(configuration.must_have), false, configuration.default_delay);
         configuration.name = location.area_name + " " + location.tree.name;
         configuration.get_entity = apiContext1 -> apiContext1.objects().query().nameMatches(location.tree.name).actions("Chop down").results().nearest();
         return new WoodcuttingRunner(apiContext, configuration, status, location.tree);

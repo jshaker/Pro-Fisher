@@ -14,7 +14,7 @@ public class Generator {
         configuration.area_of_interest = location.area;
         configuration.must_have = new HashMap<>(location.must_have);
         configuration.must_have.put(activity.tool, 1);
-        configuration.bank_config = new BankConfiguration(location.bank, new HashMap<>(configuration.must_have), false);
+        configuration.bank_config = new BankConfiguration(location.bank, new HashMap<>(configuration.must_have), false, configuration.default_delay);
         configuration.name = location.name + " " + activity.name;
         configuration.get_entity = apiContext1 -> apiContext1.npcs().query().nameMatches("Fishing spot").actions(activity.interaction_name).results().nearest();
         return new FishingRunner(apiContext, configuration, status, activity.interaction_name);

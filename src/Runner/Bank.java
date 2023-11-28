@@ -27,46 +27,44 @@ public class Bank {
         }
     }
 
-    public int Deposit() {
+    public int Bank() {
         if (apiContext.bank().isOpen()) {
             if (!apiContext.inventory().isEmpty()) {
-                status.message = "Depositing";
-                if (config.deposit_all) {
-                    apiContext.bank().depositInventory();
-                } else {
-                    Map<String, Integer> excess = CountExcess(apiContext.inventory(), config.withdraw_items);
-                    for (Map.Entry<String, Integer> kv : excess.entrySet()) {
-                        apiContext.bank().deposit(kv.getValue(), kv.getKey());
-                    }
-                }
+                return Deposit();
             }
-            Time.sleep(2000, () -> InventoryContainsExactly(apiContext.inventory(), config.withdraw_items));
-        } else {
-            status.message = "Walking to bank to deposit";
-            apiContext.webWalking().walkToBank(config.bank);
-            apiContext.bank().open();
+            return Withdraw();
         }
-        return 600;
+        status.message = "Walking to bank to deposit";
+        apiContext.webWalking().walkToBank(config.bank);
+        apiContext.bank().open();
+        return config.default_delay;
     }
-    public int Withdraw() {
-        if (apiContext.bank().isOpen()) {
-            status.message = "Withdrawing";
-            if (config.withdraw_items.containsKey("Coins")) {
-                apiContext.bank().withdrawAll("Coins");
-            }
-            Map<String, Integer> missing = CountMissing(apiContext.inventory(), config.withdraw_items);
-            String[] failedToWithdrawItems = missing.entrySet().stream().filter(kv -> !apiContext.bank().withdraw(kv.getValue(), kv.getKey())).map(Map.Entry::getKey).toArray(String[]::new);
-            if (failedToWithdrawItems.length > 0) {
-                String error = "Error - Failed to withdraw: " + Arrays.toString(failedToWithdrawItems);
-                System.out.println(error);
-                status.message = error;
-                return -1;
-            }
+
+    private int Deposit() {
+        status.message = "Depositing";
+        if (config.deposit_all) {
+            apiContext.bank().depositInventory();
         } else {
-            status.message = "Walking to bank to withdraw";
-            apiContext.webWalking().walkToBank(config.bank);
-            apiContext.bank().open();
+            Map<String, Integer> excess = CountExcess(apiContext.inventory(), config.withdraw_items);
+            for (Map.Entry<String, Integer> kv : excess.entrySet()) {
+                apiContext.bank().deposit(kv.getValue(), kv.getKey());
+            }
         }
-        return 600;
+        return config.default_delay;
+    }
+    private int Withdraw() {
+        status.message = "Withdrawing";
+        if (config.withdraw_items.containsKey("Coins")) {
+            apiContext.bank().withdrawAll("Coins");
+        }
+        Map<String, Integer> missing = CountMissing(apiContext.inventory(), config.withdraw_items);
+        String[] failedToWithdrawItems = missing.entrySet().stream().filter(kv -> !apiContext.bank().withdraw(kv.getValue(), kv.getKey())).map(Map.Entry::getKey).toArray(String[]::new);
+        if (failedToWithdrawItems.length > 0) {
+            String error = "Error - Failed to withdraw: " + Arrays.toString(failedToWithdrawItems);
+            System.out.println(error);
+            status.message = error;
+            return -1;
+        }
+        return config.default_delay;
     }
 }

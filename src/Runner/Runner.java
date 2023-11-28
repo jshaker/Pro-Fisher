@@ -51,11 +51,8 @@ public abstract class Runner implements IRunner {
         if (DoNothingCondition()) {
             return configuration.default_delay;
         }
-        if (ShouldDeposit()) {
-            return this.bank.Deposit();
-        }
-        if (!HasMustHave(apiContext.inventory(), configuration.must_have)) {
-            return this.bank.Withdraw();
+        if (ShouldDeposit() || !HasMustHave(apiContext.inventory(), configuration.must_have)) {
+            return this.bank.Bank();
         }
         if (configuration.escape_configuration != null) {
             if (configuration.escape_configuration.avoid_combat && apiContext.localPlayer().isInCombat()) {
